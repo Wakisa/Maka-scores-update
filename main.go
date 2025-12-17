@@ -1,15 +1,11 @@
+/*
+Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+
+*/
 package main
 
-import (
-	"fmt"
-	"net/http"
-)
+import "www.github.com/Wakisa/Maka-scores-update/cmd"
 
 func main() {
-	http.HandleFunc("/scores", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Football scores will be here!")
-	})
-
-	fmt.Println("Server is listening on port 5050...")
-	http.ListenAndServe(":5050", nil)
+	cmd.Execute()
 }
