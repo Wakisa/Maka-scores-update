@@ -2,7 +2,8 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"www.github.com/Wakisa/Maka-scores-update/internal/config"
+	"www.github.com/Wakisa/maka/internal/config"
+	"www.github.com/Wakisa/maka/internal/services"
 )
 
 type API struct {
@@ -15,12 +16,11 @@ func NewAPI(cfg *config.Config) *API {
 	return &API{
 		app:           fiber.New(),
 		Config:        cfg,
-		ScoresService: services.NewScoresService(cfg),
+		ScoresService: services.NewScoresService(cfg.Football),
 	}
 }
 
 func (api *API) registerRoutes() {
-	api.middleware()
 	api.routes()
 }
 

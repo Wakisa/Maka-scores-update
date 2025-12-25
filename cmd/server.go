@@ -7,8 +7,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"www.github.com/Wakisa/Maka-scores-update/internal/api"
-	"www.github.com/Wakisa/Maka-scores-update/internal/config"
+	"www.github.com/Wakisa/maka/internal/api"
+	"www.github.com/Wakisa/maka/internal/config"
 )
 
 // serverCmd represents the server command

@@ -1,21 +1,67 @@
 package services
 
-import "www.github.com/Wakisa/Maka-scores-update/internal/config"
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
 
-type ScoresService struct {
-	client *client.FootballClient
+	"www.github.com/Wakisa/maka/internal/config"
+	"www.github.com/Wakisa/maka/internal/schema"
+)
+
+type ScoresService interface {
+	FetchLiveScores(competition string) ([]schema.ScoreResponse, error)
+	FetchFinishedScores(competition string) ([]schema.ScoreResponse, error)
 }
 
-func NewScoresService(cfg *config.Config) ScoresService {
-	return ScoresService{
-		client: clients.NewFootballClient(cfg.Football.APIKey),
+type scoresServiceImpl struct {
+	footballCfg config.FootballConfiguration
+}
+
+func NewScoresService(cfg config.FootballConfiguration) ScoresService {
+	return &scoresServiceImpl{
+		footballCfg: cfg,
 	}
 }
 
-func (s ScoresService) FetchLiveScores(competition string) (map[string]interface{}, error) {
-	return s.client.GetLiveMatches(competition)
+func (s *scoresServiceImpl) FetchLiveScores(competition string) ([]schema.ScoreResponse, error) {
+	url := fmt.Sprintf("%s/competitions/%s/matches?status=LIVE", s.footballCfg.BaseURL, competition)
+	return s.fetchMatches(url)
 }
 
-func (s ScoresService) FetchFinishedScores(competition string) (map[string]interface{}, error) {
-	return s.client.GetFinishedMatches(competition)
+func (s *scoresServiceImpl) FetchFinishedScores(competition string) ([]schema.ScoreResponse, error) {
+	url := fmt.Sprintf("%s/competitions/%s/matches?status=FINISHED", s.footballCfg.BaseURL, competition)
+	return s.fetchMatches(url)
+}
+
+func (s *scoresServiceImpl) fetchMatches(url string) ([]schema.ScoreResponse, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("X-Auth-Token", s.footballCfg.APIKey)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var raw schema.FootballMatchesResponse
+	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
+		return nil, err
+	}
+
+	var results []schema.ScoreResponse
+	for _, m := range raw.Matches {
+		results = append(results, schema.ScoreResponse{
+			HomeTeam:  m.HomeTeam.Name,
+			AwayTeam:  m.AwayTeam.Name,
+			HomeScore: m.Score.FullTime.Home,
+			AwayScore: m.Score.FullTime.Away,
+			Status:    m.Status,
+			MatchDate: m.UtcDate,
+		})
+	}
+	return results, nil
 }

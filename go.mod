@@ -1,5 +1,4 @@
-module www.github.com/Wakisa/Maka-scores-update
-
+module www.github.com/Wakisa/maka
 go 1.23.0
 
 require (

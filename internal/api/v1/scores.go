@@ -1,8 +1,8 @@
 package v1
 
 import (
-	"github.com/Wakisa/maka-scores-update/internal/services"
 	"github.com/gofiber/fiber/v2"
+	"www.github.com/Wakisa/maka/internal/services"
 )
 
 func GetLiveScores(service services.ScoresService) fiber.Handler {
@@ -12,7 +12,12 @@ func GetLiveScores(service services.ScoresService) fiber.Handler {
 		if err != nil {
 			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 		}
-		return c.JSON(data)
+
+		return c.JSON(fiber.Map{
+			"competition": comp,
+			"count":       len(data),
+			"matches":     data,
+		})
 	}
 }
 
@@ -23,6 +28,11 @@ func GetFinishedScores(service services.ScoresService) fiber.Handler {
 		if err != nil {
 			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 		}
-		return c.JSON(data)
+
+		return c.JSON(fiber.Map{
+			"competition": comp,
+			"count":       len(data),
+			"matches":     data,
+		})
 	}
 }

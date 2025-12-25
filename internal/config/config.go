@@ -35,11 +35,13 @@ type LoggingConfiguration struct {
 }
 
 type FootballConfiguration struct {
-	APIKey string `mapstructure:"api_key" envconfig:"FOOTBALL_API_KEY"`
+	APIKey  string `mapstructure:"api_key" envconfig:"FOOTBALL_API_KEY"`
+	BaseURL string `mapstructure:"base_url"`
 }
 
 func Load() *Config {
 	viper.SetConfigName("maka")
+	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("$HOME/.maka")
 	viper.SetEnvPrefix("MAKA")
@@ -47,6 +49,10 @@ func Load() *Config {
 
 	var cfg Config
 	if err := viper.ReadInConfig(); err != nil {
+		fmt.Println("Failed to read config:", err)
+		os.Exit(1)
+	}
+	if err := viper.Unmarshal(&cfg); err != nil {
 		fmt.Println("Failed to unmarshal config:", err)
 		os.Exit(1)
 	}
@@ -55,7 +61,7 @@ func Load() *Config {
 }
 
 func (db DatabaseConfiguration) OpenDB() *sqlx.DB {
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?ssmode=disable",
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
 		db.Username, db.Password, db.Host, db.Port, db.Database)
 	conn := sqlx.MustConnect("pgx", dsn)
 	conn.SetConnMaxLifetime(time.Hour)

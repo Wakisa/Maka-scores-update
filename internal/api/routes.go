@@ -1,8 +1,8 @@
 package api
 
 import (
-	apiv1 "github.com/Wakisa/maka-scores-update/internal/api/v1"
 	"github.com/gofiber/fiber/v2"
+	apiv1 "www.github.com/Wakisa/maka/internal/api/v1"
 )
 
 func (api *API) routes() {

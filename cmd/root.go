@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"www.github.com/Wakisa/Maka-scores-update/internal/version"
+	"www.github.com/Wakisa/maka/internal/version"
 )
 
 // rootCmd represents the base command when called without any subcommands
