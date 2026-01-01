@@ -31,6 +31,15 @@ function ResultsSidebar({ competition }) {
     fetchResults();
   }, [competition, page]);
 
+  const totalPages = Math.ceil(totalCount / pageSize);
+
+  // Clamp page if it exceeds the last page
+  useEffect(() => {
+    if (totalPages > 0 && page >= totalPages) {
+      setPage(totalPages - 1);
+    }
+  }, [totalPages, page]);
+
   return (
     <aside className="results-sidebar">
       <h2>Results</h2>
@@ -40,24 +49,28 @@ function ResultsSidebar({ competition }) {
         <p>No finished matches.</p>
       ) : (
         <>
-          <ul>
-            {results.map((m, idx) => (
-              <li key={idx}>
-                {m.home_team} {m.home_score} - {m.away_score} {m.away_team}
-                <br />
-                <small>{new Date(m.match_date).toLocaleString()}</small>
-              </li>
-            ))}
-          </ul>
+          {results.length === 0 ? (
+            <p>No matches on this page.</p>
+          ) : (
+            <ul>
+              {results.map((m, idx) => (
+                <li key={idx}>
+                  {m.home_team} {m.home_score} - {m.away_score} {m.away_team}
+                  <br />
+                  <small>{new Date(m.match_date).toLocaleString()}</small>
+                </li>
+              ))}
+            </ul>
+          )}
           <div className="pagination">
             <button disabled={page === 0} onClick={() => setPage(page - 1)}>
               Previous
             </button>
             <span>
-              Page {page + 1} of {Math.ceil(totalCount / pageSize)}
+              Page {page + 1} of {totalPages || 1}
             </span>
             <button
-              disabled={page + 1 >= Math.ceil(totalCount / pageSize)}
+              disabled={page + 1 >= totalPages}
               onClick={() => setPage(page + 1)}
             >
               Next
