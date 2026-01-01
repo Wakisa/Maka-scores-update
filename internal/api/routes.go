@@ -16,6 +16,7 @@ func (api *API) routes() {
 	// Versioned routes
 	v1 := router.Group("/v1")
 	{
+		v1.Get("/scores/upcoming/:competition", apiv1.GetUpcomingScores(api.ScoresService))
 		v1.Get("/scores/live/:competition", apiv1.GetLiveScores(api.ScoresService))
 		v1.Get("/scores/finished/:competition", apiv1.GetFinishedScores(api.ScoresService))
 	}
