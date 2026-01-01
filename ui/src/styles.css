@@ -1,0 +1,68 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    background-color: #222;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.main {
+    display: flex;
+    padding: 1rem;
+    gap: 2rem;
+}
+
+.left-panel {
+    flex: 1;
+}
+
+.results-sidebar {
+    width: 30%;
+    background-color: #f4f4f4;
+    padding: 1rem;
+    border-left: 1px solid #ccc;
+}
+
+.selector {
+    margin-bottom: 1rem;
+}
+
+.selector label {
+    margin-right: 0.5rem;
+}
+
+.scores-panel ul,
+.results-sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.scores-panel li, 
+.results-sidebar li {
+    margin-bottom: 0.5rem;
+}
+
+.footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #eee;
+    margin-top: 2rem;
+}
+
+.pagination {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pagination button {
+    padding: 0.5rem 1rem;
+    display: flex;
+    font-size: 0.9rem;
+}
