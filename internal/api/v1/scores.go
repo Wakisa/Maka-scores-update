@@ -5,6 +5,24 @@ import (
 	"www.github.com/Wakisa/maka/internal/services"
 )
 
+func GetUpcomingScores(service services.ScoresService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		comp := c.Params("competition")
+		data, err := service.FetchUpcomingScores(comp)
+		if err != nil {
+			return c.Status(500).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+
+		return c.JSON(fiber.Map{
+			"competition": comp,
+			"count":       len(data),
+			"matches":     data,
+		})
+	}
+}
+
 func GetLiveScores(service services.ScoresService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		comp := c.Params("competition")

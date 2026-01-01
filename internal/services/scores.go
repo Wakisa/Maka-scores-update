@@ -12,6 +12,7 @@ import (
 type ScoresService interface {
 	FetchLiveScores(competition string) ([]schema.ScoreResponse, error)
 	FetchFinishedScores(competition string) ([]schema.ScoreResponse, error)
+	FetchUpcomingScores(competition string) ([]schema.ScoreResponse, error)
 }
 
 type scoresServiceImpl struct {
@@ -22,6 +23,11 @@ func NewScoresService(cfg config.FootballConfiguration) ScoresService {
 	return &scoresServiceImpl{
 		footballCfg: cfg,
 	}
+}
+
+func (s *scoresServiceImpl) FetchUpcomingScores(competition string) ([]schema.ScoreResponse, error) {
+	url := fmt.Sprintf("%s/competitions/%s/matches?status=SCHEDULED", s.footballCfg.BaseURL, competition)
+	return s.fetchMatches(url)
 }
 
 func (s *scoresServiceImpl) FetchLiveScores(competition string) ([]schema.ScoreResponse, error) {
