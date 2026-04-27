@@ -1,2 +1,2 @@
 # Maka-scores-update
-This repository about practicing Go language by building a web server that can give live score updates for games
+This repository is about practicing Go language by building a web application that can give live score updates for games.
